@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "run": "nodemon app.js",
-    "start": "node app.js"
+    "start": "npx forever start app.js"
   },
   "repository": {
     "type": "git",
