@@ -19,5 +19,4 @@ ProblemScheme.statics.isProblemExist = function (id, callback) {
     this.countDocuments({_id: id}, callback);
 };
 
-
 mongoose.model('Problem', ProblemScheme);

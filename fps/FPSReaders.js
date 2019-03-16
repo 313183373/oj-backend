@@ -53,7 +53,7 @@ parseString(xml, (err, result) => {
         }
         const hint = problem.hint.join('').trim();
         const origin = problem.source.join('').trim();
-        const solution = problem.solution.map(s => ({language: s.$.language, code: s._}));
+        // const solution = problem.solution.map(s => ({language: s.$.language, code: s._}));
         return {
             title,
             timeLimit,
