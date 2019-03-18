@@ -9,7 +9,7 @@ class JudgeEmitter extends EventEmitter {
 
 const judgeEmitter = new JudgeEmitter();
 judgeEmitter.on('startJudge', (submitID, problemID) => {
-    const command = `docker run --cap-add=SYS_PTRACE --rm -w /judge 313183373/oj ./judge ${submitID} ${problemID}`;
+    const command = `docker run --cap-add=SYS_PTRACE --net=mynet --rm -w /judge 313183373/oj ./judge ${submitID} ${problemID}`;
     console.log(`${submitID} ${problemID}`);
     childProcess.exec(command, function (err, stdout, stderr) {
         if (err) {
