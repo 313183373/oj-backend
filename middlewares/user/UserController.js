@@ -74,7 +74,7 @@ router.post('/login', (req, res) => {
             return res.status(401).send('Password wrong');
         }
         const token = user.generateToken();
-        res.status(200).send({auth: true, token: token});
+        res.status(200).send(token);
     })
 });
 
