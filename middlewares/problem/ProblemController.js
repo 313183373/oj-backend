@@ -14,9 +14,18 @@ router.get('/problems', async (req, res) => {
         acceptCount: 1
     }).skip(start).limit(ProblemPerPage).exec();
     res.json({
-        status: "success",
         problems,
     });
+});
+
+router.get('/problems/:problemId', async (req, res) => {
+    const problemId = req.params.problemId;
+    try {
+        const problem = await Problem.findById(problemId).exec();
+        res.json(problem);
+    } catch (e) {
+        return res.status(404).send("Problem not found");
+    }
 });
 
 module.exports = router;
