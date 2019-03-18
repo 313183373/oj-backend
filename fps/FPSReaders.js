@@ -60,6 +60,8 @@ parseString(xml, (err, result) => {
             memLimit,
             origin,
             content,
+            submitCount: 0,
+            acceptCount: 0,
             inputDesc,
             outputDesc,
             sampleInput,

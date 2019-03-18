@@ -18,16 +18,17 @@ router.use(bodyParser.json());
 router.post('/judge', async (req, res) => {
     const {language, code, problem, author} = req.body;
     if (!language || !code || !problem || !author) {
-        return res.json({
-            status: "error",
-            error: 'params error!'
+        return res.status(400).json({
+            error: 'params error!',
         });
     }
     switch (language) {
         case "c++" : {
             Problem.isProblemExist(problem, (err, count) => {
                 if (err) {
-                    return res.json({status: "error", error: "server error!"});
+                    return res.status(500).json({
+                        error: 'server error',
+                    });
                 }
                 if (count) {
                     Submit.create({author, problem, language, code}, (err, submit) => {
