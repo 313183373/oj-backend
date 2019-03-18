@@ -61,7 +61,7 @@ router.get('/me', verifyToken(), (req, res) => {
 router.post('/login', (req, res) => {
     const {email, password} = req.body;
     if (!email || !password || !emailValidator.validate(email) || !passwordSchema.validate(password)) {
-        res.status(400).send("Invalid username/password supplied");
+        return res.status(400).send("Invalid username/password supplied");
     }
     User.findOne({email: req.body.email}, (err, user) => {
         if (err) {
@@ -71,7 +71,7 @@ router.post('/login', (req, res) => {
             return res.status(404).send('No user found.');
         }
         if (!user.validatePassword(req.body.password)) {
-            return res.status(401).send({auth: false, token: null});
+            return res.status(401).send('Password wrong');
         }
         const token = user.generateToken();
         res.status(200).send({auth: true, token: token});
