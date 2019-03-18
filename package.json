@@ -20,10 +20,12 @@
     "body-parser": "latest",
     "cheerio": "^1.0.0-rc.2",
     "dotenv": "^6.1.0",
+    "email-validator": "^2.0.4",
     "express": "^4.16.4",
     "fs-extra": "^7.0.1",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.12",
+    "password-validator": "^4.1.1",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {

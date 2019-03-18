@@ -17,8 +17,15 @@ const ProblemScheme = new mongoose.Schema({
 });
 
 
-ProblemScheme.statics.isProblemExist = function (id, callback) {
-    this.countDocuments({_id: id}, (err, count) => callback(err, count > 0));
+ProblemScheme.statics.isProblemExist = function (id) {
+    return new Promise((resolve, reject) => {
+        this.countDocuments({_id: id}, (err, count) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(count > 0);
+        });
+    });
 };
 
 mongoose.model('Problem', ProblemScheme);

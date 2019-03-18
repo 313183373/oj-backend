@@ -19,6 +19,15 @@ UserSchema.methods.validatePassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-mongoose.model('User', UserSchema);
+UserSchema.statics.isUnusedEmail = function (email, callback) {
+    return new Promise((resolve, reject) => {
+        this.countDocuments({email}, (err, count) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(count === 0);
+        });
+    });
+};
 
-module.exports = mongoose.model('User');
+mongoose.model('User', UserSchema);
