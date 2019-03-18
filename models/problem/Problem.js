@@ -6,6 +6,8 @@ const ProblemScheme = new mongoose.Schema({
     memLimit: Number,
     origin: String,
     content: String,
+    submitCount: Number,
+    acceptCount: Number,
     inputDesc: String,
     outputDesc: String,
     sampleInput: String,
