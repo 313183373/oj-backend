@@ -5,7 +5,7 @@ const fs = require('fs-extra');
 const mongoose = require('mongoose');
 const async = require('async');
 const exec = require('util').promisify(childProcess.exec);
-const judgeEmitter = require('./JudgeEmitter');
+const judgeEmitter = require('../problem/JudgeEmitter');
 
 const Problem = mongoose.model('Problem');
 const Submit = mongoose.model("Submit");
@@ -24,13 +24,13 @@ router.post('/judge', async (req, res) => {
     }
     switch (language) {
         case "c++" : {
-            Problem.isProblemExist(problem, (err, count) => {
+            Problem.isProblemExist(problem, (err, isExist) => {
                 if (err) {
                     return res.status(500).json({
                         error: 'server error',
                     });
                 }
-                if (count) {
+                if (isExist) {
                     Submit.create({author, problem, language, code}, (err, submit) => {
                         if (err) {
                             return res.json({status: "error", error: "server error!"});
