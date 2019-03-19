@@ -19,9 +19,7 @@ router.get('/', async (req, res) => {
         submitCount: 1,
         acceptCount: 1
     }).skip(start).limit(ProblemPerPage).exec();
-    res.json({
-        problems,
-    });
+    res.json(problems);
 });
 
 router.get('/:problemId', async (req, res) => {
