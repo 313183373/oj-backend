@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<fps version="1.1" url="http://code.google.com/p/freeproblemset/">
+	<generator name="HUSTOJ" url="http://code.google.com/p/hustoj/"/>
+	<item>
+<title><![CDATA[通话记录]]></title>
+<time_limit unit="s"><![CDATA[1]]></time_limit>
+<memory_limit unit="mb"><![CDATA[128]]></memory_limit>
+
+<description><![CDATA[<p>使用3个队列，分别保留手机上最近10个，（0）未接来电、（1）已接来电、（2）已拨电话。</p>
+<p></p>]]></description>
+<input><![CDATA[<p>全部通话记录，每行一条记录。</p>
+<p>每条记录包含两个数字，第一个数代表记录类型，第二个数代表手机号码。</p>]]></input> 
+<output><![CDATA[<p>分3列输出未接来电、已接来电、已拨电话。</p>
+<p>列之间用空格分割，后接电话在最先输出，不足10条用0占位。</p>]]></output>
+<sample_input><![CDATA[2	18270477699
+1	10149800116
+0	19906559817
+1	16209018105
+1	16804212234
+2	19289130583
+1	17982711123
+0	10897630486
+1	11860787674
+0	15192777554
+]]></sample_input>
+<sample_output><![CDATA[15192777554 11860787674 19289130583
+10897630486 17982711123 18270477699
+19906559817 16804212234 0
+0 16209018105 0
+0 10149800116 0
+0 0 0
+0 0 0
+0 0 0
+0 0 0
+0 0 0
+]]></sample_output>
+<test_input><![CDATA[0	14971638568
+2	18270477699
+1	10149800116
+0	19906559817
+1	16209018105
+1	16804212234
+2	19289130583
+1	17982711123
+0	10897630486
+1	11860787674
+0	15192777554
+]]></test_input>
+<test_output><![CDATA[15192777554 11860787674 19289130583
+10897630486 17982711123 18270477699
+19906559817 16804212234 0
+14971638568 16209018105 0
+0 10149800116 0
+0 0 0
+0 0 0
+0 0 0
+0 0 0
+0 0 0
+]]></test_output>
+<hint><![CDATA[]]></hint>
+<source><![CDATA[数据结构Java版]]></source>
+<solution language="C++"><![CDATA[#include<iostream>
+#include<stack>
+#include<string>
+using namespace std;
+
+int main()
+{
+	int n=0,m;
+	string s;
+	stack<string> S0,S1,S2;
+	while(cin>>m>>s)
+	{
+		n++;
+		if(!m)
+			S0.push(s);
+		else if(m==1)
+			S1.push(s);
+		else
+			S2.push(s);
+	}
+	for(m=0;m<10;m++)
+	{
+		if(S0.empty())
+			cout<<0<<' ';
+		else
+		{
+			cout<<S0.top()<<' ';
+			S0.pop();
+		}
+		if(S1.empty())
+			cout<<0<<' ';
+		else
+		{
+			cout<<S1.top()<<' ';
+			S1.pop();
+		}
+		if(S2.empty())
+			cout<<0<<endl;
+		else
+		{
+			cout<<S2.top()<<endl;
+			S2.pop();
+		}
+	}
+	while(!S0.empty())
+	{
+		cout<<S0.top()<<' ';
+		S0.pop();
+	}
+	while(!S1.empty())
+	{
+		cout<<S1.top()<<' ';
+		S1.pop();
+	}
+	while(!S2.empty())
+	{
+		cout<<S2.top()<<endl;
+		S2.pop();
+	}
+	return 0;
+}]]></solution>
+</item>
+<item>
+<title><![CDATA[使用栈实现进制转换]]></title>
+<time_limit unit="s"><![CDATA[1]]></time_limit>
+<memory_limit unit="mb"><![CDATA[128]]></memory_limit>
+
+<description><![CDATA[<p>使用栈将一个很长（&gt;30）的十进制数转换为二进制数</p>]]></description>
+<input><![CDATA[<p>若干个很长的十进制数</p>
+<p>每行一个</p>]]></input> 
+<output><![CDATA[<p>转换为二进制，每行输出一个</p>]]></output>
+<sample_input><![CDATA[123456789012345678901234567890
+753951684269875454652589568545854758545824]]></sample_input>
+<sample_output><![CDATA[1100011101110100100001111111101101100001101110011111000001110111001001110001111110000101011010010
+10001010011110101010001101001000100100100000101001011010001010101001000100111101011001110001000111110010001000101101111110110110100110100000]]></sample_output>
+<test_input><![CDATA[753951684269875454652589568545854758545824123123]]></test_input>
+<test_output><![CDATA[1000010000010000010111001110000000100001011001100110011101100101010000000110101011110010110111111001100101001111010010100010000110000000011101111000100011110011]]></test_output>
+<hint><![CDATA[]]></hint>
+<source><![CDATA[数据结构Java版]]></source>
+<solution language="C"><![CDATA[#include<stdio.h>
+#include<string.h>
+
+char r[1000];
+
+void bc(char n[],int s,int e)
+{
+	int i,flag,k,j,a[1000],b[1000];
+	for(i=0;i<strlen(n);i++)
+		a[i]=n[i]-48;
+	k=0;
+	while(1)
+	{
+		for(i=0;i<strlen(n);i++)
+		{
+			if(a[i]!=0&&i<strlen(n)-1)
+			{
+				a[i+1]+=(a[i]%e)*s;
+				a[i]/=e;
+			}
+			if(i==strlen(n)-1)
+			{
+				b[k++]=a[i]%e;
+				a[i]/=e;
+			}
+		}
+		flag=0;
+		for(i=0;i<strlen(n);i++)
+			if(a[i]!=0)
+				flag=1;
+		if(!flag)
+			break;
+	}
+	for(j=0,i=k-1;i>=0;i--)
+		r[j++]=b[i]+48;
+	r[j]='\0';
+}
+
+int main()
+{
+	char n[1000];
+	while(scanf("%s",n)!=EOF)
+	{
+		bc(n,10,2);
+		puts(r);
+	}
+	return 0;
+}]]></solution>
+</item>
+<item>
+<title><![CDATA[判断升序]]></title>
+<time_limit unit="s"><![CDATA[1]]></time_limit>
+<memory_limit unit="mb"><![CDATA[128]]></memory_limit>
+
+<description><![CDATA[<p>实现public static boolean isSorted(int[] table)</p>
+<p>判断整数数组元素是否已经按升序排序。</p>]]></description>
+<input><![CDATA[<p>一列数，需要判断的数组元素。</p>]]></input> 
+<output><![CDATA[<p>如果已经排序输出YES</p>
+<p>如果没有排序输出NO</p>]]></output>
+<sample_input><![CDATA[1
+2
+3
+4
+5
+6
+]]></sample_input>
+<sample_output><![CDATA[YES
+]]></sample_output>
+<test_input><![CDATA[3
+2
+1
+123
+123123
+123
+231
+231
+78
+567
+45
+234
+567
+345
+456
+345
+234
+]]></test_input>
+<test_output><![CDATA[NO]]></test_output>
+<hint><![CDATA[<p>import java.util.*;</p>
+<p>public class Main{</p>
+<p>&nbsp;&nbsp; public static void main(String args[]){</p>
+<p>&nbsp; Scanner cin = new Scanner(System.in);</p>
+<p>&nbsp; int a, b;<br />
+&nbsp; b=-1;<br />
+&nbsp; while (cin.hasNext()){</p>
+<p>&nbsp; a = cin.nextInt();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(??????????){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;????????;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;????????????????????;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />
+&nbsp;????????????;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;if(!cin.hasNext())<br />
+&nbsp;&nbsp;????????????????????????</p>
+<p>&nbsp; }</p>
+<p>}</p>
+<p><br />
+</p>]]></hint>
+<source><![CDATA[数据结构Java版]]></source>
+<solution language="C"><![CDATA[#include<stdio.h>
+
+int main()
+{
+	int n,f,k=1;
+	scanf("%d",&f);
+	while(scanf("%d",&n)!=EOF)
+	{
+		if(n<f)
+		{
+			k=0;
+			break;
+		}
+		f=n;
+	}
+	puts(k?"YES":"NO");
+	return 0;
+} ]]></solution>
+</item>
+<item>
+<title><![CDATA[金额的中文大写]]></title>
+<time_limit unit="s"><![CDATA[1]]></time_limit>
+<memory_limit unit="mb"><![CDATA[128]]></memory_limit>
+
+<description><![CDATA[<p>读入一个浮点数值，将其转化为金额的中文大写形式。<br />
+例如：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 123.45转化为&ldquo;壹佰贰拾叁元肆角伍分&rdquo;。</p>
+<p>1）当金额为整数时，只表示整数部分，省略小数部分，并添加&ldquo;整&rdquo;字。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 例如：123表示为&ldquo;壹佰贰拾叁元整&rdquo;</p>
+<p>2）当金额中有连续的0时（含一个0），只需写一个&ldquo;零&rdquo;即可。<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 例如：10005表示为&ldquo;壹万零伍元整&rdquo;</p>
+<p>3）10元缩写为&ldquo;拾元整&rdquo;。</p>]]></description>
+<input><![CDATA[<p>表示金额的浮点数若干，每行一个</p>]]></input> 
+<output><![CDATA[<p>各金额的中文大写形式，每行一个</p>
+<p>注：数字&ldquo;壹贰叁肆伍陆柒捌玖拾佰仟万亿&rdquo;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 单位&ldquo;元角分&rdquo;</p>]]></output>
+<sample_input><![CDATA[123.45
+123
+10005
+10]]></sample_input>
+<sample_output><![CDATA[壹佰贰拾叁元肆角伍分
+壹佰贰拾叁元整
+壹万零伍元整
+拾元整]]></sample_output>
+<test_input><![CDATA[123456789.5]]></test_input>
+<test_output><![CDATA[壹亿贰仟叁佰肆拾伍万陆仟柒佰捌拾玖元伍角
+]]></test_output>
+<hint><![CDATA[]]></hint>
+<source><![CDATA[数据结构Java版]]></source>
+<solution language="C++"><![CDATA[#include<iostream>
+#include<string>
+#include<cstdlib>
+using namespace std;
+
+const int INT_ONLY=1;
+const int SMALL_ONLY=2;
+
+string roundString(string s)
+{
+	double d=atof(s.c_str());
+	int dec,sign;
+	s=fcvt(d,2,&dec,&sign);
+	return s;
+}
+
+string formatChinese(int flag,string s)
+{
+	int sLength=s.length();
+	string bigLetter[]={"零","壹","贰","叁","肆","伍","陆","柒","捌","玖"};
+	string unit[]={"元","拾","佰","仟","万","拾","佰","仟","亿","拾","佰","仟","万"};
+	string small[]={"分","角"};
+	string newS="";
+	for(int i=0;i<sLength;i++)
+	{
+		if(flag==INT_ONLY)
+			newS=newS+bigLetter[s.at(i)-48]+unit[sLength-i-1];
+		else if(flag==SMALL_ONLY)
+			newS=newS+bigLetter[s.at(i)-48]+small[sLength-i-1];
+	}
+	return newS;
+}
+
+string splitNum(string s)
+{
+	if(""==s)
+		return "";
+	string intOnly=s.substr(0,s.size()-2);
+	string intPart=formatChinese(1,intOnly);
+	string smallOnly=s.substr(s.size()-2,s.size());
+	string smallPart=formatChinese(2,smallOnly);
+	string newS=intPart+smallPart;
+	return newS;
+}
+
+string replaceAll(string src,string regex,string replacement)
+{
+	int length=regex.length();
+	while(src.find(regex)<src.length())
+		src.replace(src.find(regex),length,replacement);
+	return src;
+}
+
+string cleanZero(string s)
+{
+	if(""==s)
+		return "";
+	string regex1[]={"零仟","零佰","零拾"};
+	string regex2[]={"零亿","零万","零元"};
+	string regex3[]={"亿","万","元"};
+	string regex4[]={"零角","零分"};
+	for(int i=0;i<3;i++)
+		s=replaceAll(s,regex1[i],"零");
+	for(int i=0;i<3;i++)
+	{
+		s=replaceAll(s,"零零零","零");
+		s=replaceAll(s,"零零","零");
+		s=replaceAll(s,regex2[i],regex3[i]);
+	}
+	for(int i=0;i<2;i++)
+		s=replaceAll(s,regex4[i],"");
+	s=replaceAll(s,"亿万","亿");
+	return s;
+}
+
+int main()
+{
+	string s;
+	int i,j,l,flag;
+	while(cin>>s)
+	{
+		if(s=="0"||s=="0.0"||s=="0.00")
+		{
+			cout<<"零元整"<<endl;
+			continue;
+		}
+		if(s=="10"||s=="10.0"||s=="10.00")
+		{
+			cout<<"拾元整"<<endl;
+			continue;
+		}
+		l=s.length();
+		for(i=0;i<l;i++)
+			if(s[i]=='.')
+			{
+				for(flag=1,j=i+1;s[j]!='\0';j++)
+					if(s[j]!='0')
+					{
+						flag=0;
+						break;
+					}
+				if(!flag)
+					break;
+			}
+		s=roundString(s);
+		s=splitNum(s);
+		s=cleanZero(s);
+		if(i<l)
+			cout<<s<<endl;
+		else
+			cout<<s<<"整"<<endl;
+	}
+	return 0;
+}]]></solution>
+</item>
+<item>
+<title><![CDATA[复数加法]]></title>
+<time_limit unit="s"><![CDATA[1]]></time_limit>
+<memory_limit unit="mb"><![CDATA[128]]></memory_limit>
+
+<description><![CDATA[<p>数集拓展到实数范围内，仍有些运算无法进行。比如判别式小于0的<a href="http://baike.baidu.com/view/397767.htm" target="_blank"><font color="#136ec2">一元二次方程</font></a>仍<a href="http://baike.baidu.com/view/1203270.htm" target="_blank"><font color="#136ec2">无解</font></a>，因此将数集再次扩充，达到复数范围。</p>
+<div class="spctrl"></div>
+<p>　　<b>定义：形如z=a+bi的数称为复数(complex number)</b>，其中规定<b>i</b>为<b>虚数单位</b>，且i^2=i*i=-1（a，b是任意<a href="http://baike.baidu.com/view/14749.htm" target="_blank"><font color="#136ec2">实数</font></a>）</p>
+<div class="spctrl"></div>
+<p>　　我们将复数z=a+bi中的实数a称为复数z的实部（real part)记作Rez=a</p>
+<div class="spctrl"></div>
+<p>　　实数b称为复数z的<a href="http://baike.baidu.com/view/2441262.htm" target="_blank"><font color="#136ec2">虚部</font></a>（imaginary part)记作 Imz=b.</p>
+<div class="spctrl"></div>
+<p>　　已知：当b=0时，z=a，这时复数成为实数；</p>
+<div class="spctrl"></div>
+<p>　　当a=0且b&ne;0时 ，z=bi，我们就将其称为<a href="http://baike.baidu.com/view/899964.htm" target="_blank"><b><font color="#136ec2">纯虚数</font></b></a>。</p>
+<div class="spctrl"></div>
+<p>　　<b>定义： 对于复数z=a+bi，称复数z'=a-bi为z的</b><a href="http://baike.baidu.com/view/137793.htm" target="_blank"><b><font color="#136ec2">共轭复数</font></b></a><b>。</b></p>
+<div class="spctrl"></div>
+<p>　　<b>定义：将复数的实部与虚部的平方和的正的平方根的值称为该复数的模，记作∣z∣</b></p>
+<div class="spctrl"></div>
+<p>　　即对于复数z=a+bi，它的模</p>
+<div class="spctrl"></div>
+<p>　　∣z∣=&radic;(a^2+b^2)</p>
+<div class="spctrl"></div>
+<p>　　复数的集合用C表示，显然，R是C的真子集</p>
+<div class="spctrl"></div>
+<p>　　复数集是无序集，不能建立大小顺序。</p>
+<div class="spctrl"></div>
+<p>　　共轭复数有些有趣的性质: ︱x+yi︱=︱x-yi︱ (x+yi)*(x-yi)=x^2+y^2=︱x+yi︱^2=︱x-yi︱^2</p>]]></description>
+<input><![CDATA[<p>两个复数分两行，每行两个数，代表复数的实部和虚部。</p>]]></input> 
+<output><![CDATA[<p>两个复数的和。</p>]]></output>
+<sample_input><![CDATA[1 2
+3 4]]></sample_input>
+<sample_output><![CDATA[4 6]]></sample_output>
+<test_input><![CDATA[100 200
+-10 -20]]></test_input>
+<test_output><![CDATA[90 180]]></test_output>
+<hint><![CDATA[]]></hint>
+<source><![CDATA[数据结构Java版]]></source>
+<solution language="C"><![CDATA[#include<stdio.h>
+
+int main()
+{
+	int a,b,c,d;
+	scanf("%d%d%d%d",&a,&b,&c,&d);
+	printf("%d %d\n",a+c,b+d);
+	return 0;
+} ]]></solution>
+</item>
+<item>
+<title><![CDATA[复数乘积]]></title>
+<time_limit unit="s"><![CDATA[1]]></time_limit>
+<memory_limit unit="mb"><![CDATA[128]]></memory_limit>
+
+<description><![CDATA[<p>数集拓展到实数范围内，仍有些运算无法进行。比如判别式小于0的<a href="http://baike.baidu.com/view/397767.htm" target="_blank"><font color="#136ec2">一元二次方程</font></a>仍<a href="http://baike.baidu.com/view/1203270.htm" target="_blank"><font color="#136ec2">无解</font></a>，因此将数集再次扩充，达到复数范围。</p>
+<div class="spctrl"></div>
+<p>　　<b>定义：形如z=a+bi的数称为复数(complex number)</b>，其中规定<b>i</b>为<b>虚数单位</b>，且i^2=i*i=-1（a，b是任意<a href="http://baike.baidu.com/view/14749.htm" target="_blank"><font color="#136ec2">实数</font></a>）</p>
+<div class="spctrl"></div>
+<p>　　我们将复数z=a+bi中的实数a称为复数z的实部（real part)记作Rez=a</p>
+<div class="spctrl"></div>
+<p>　　实数b称为复数z的<a href="http://baike.baidu.com/view/2441262.htm" target="_blank"><font color="#136ec2">虚部</font></a>（imaginary part)记作 Imz=b.</p>
+<div class="spctrl"></div>
+<p>　　已知：当b=0时，z=a，这时复数成为实数；</p>
+<div class="spctrl"></div>
+<p>　　当a=0且b&ne;0时 ，z=bi，我们就将其称为<a href="http://baike.baidu.com/view/899964.htm" target="_blank"><b><font color="#136ec2">纯虚数</font></b></a>。</p>
+<div class="spctrl"></div>
+<p>　　<b>定义： 对于复数z=a+bi，称复数z'=a-bi为z的</b><a href="http://baike.baidu.com/view/137793.htm" target="_blank"><b><font color="#136ec2">共轭复数</font></b></a><b>。</b></p>
+<div class="spctrl"></div>
+<p>　　<b>定义：将复数的实部与虚部的平方和的正的平方根的值称为该复数的模，记作∣z∣</b></p>
+<div class="spctrl"></div>
+<p>　　规定复数的乘法按照以下的法则进行：</p>
+<div class="spctrl"></div>
+<p>　　设z1=a+bi，z2=c+di(a、b、c、d&isin;R)是任意两个复数，那么它们的积(a+bi)(c+di)=(ac－bd)+(bc+ad)i.</p>
+<div class="spctrl"></div>
+<p>　　其实就是把两个复数相乘，类似两个多项式相乘，在所得的结果中把i2换成－1，并且把实部与虚部分别合并.两个复数的积仍然是一个复数.</p>]]></description>
+<input><![CDATA[<p>两个复数分两行，每行两个数，代表复数的实部和虚部。</p>]]></input> 
+<output><![CDATA[<p>两个复数的乘积。</p>]]></output>
+<sample_input><![CDATA[1 1
+1 1]]></sample_input>
+<sample_output><![CDATA[0 2]]></sample_output>
+<test_input><![CDATA[12 23
+34 45]]></test_input>
+<test_output><![CDATA[-627 1322]]></test_output>
+<hint><![CDATA[]]></hint>
+<source><![CDATA[数据结构Java版
+
+数据结构Java版
+
+数据结构Java版]]></source>
+<solution language="C"><![CDATA[#include<stdio.h>
+
+int main()
+{
+	int a,b,c,d;
+	scanf("%d%d%d%d",&a,&b,&c,&d);
+	printf("%d %d\n",a*c-b*d,a*d+b*c);
+	return 0;
+}]]></solution>
+</item>
+<item>
+<title><![CDATA[多项式相加]]></title>
+<time_limit unit="s"><![CDATA[1]]></time_limit>
+<memory_limit unit="mb"><![CDATA[128]]></memory_limit>
+
+<img><src><![CDATA[http://oj.acm.zj.cn:80/upload/201107/1928.PNG]]></src><base64><![CDATA[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]]></base64></img><description><![CDATA[<p>一条单链表可以表示一个一元多项式，每个节点包含三个域：指数、系数和后继节点（指针或引用）。</p>
+<p>表示多项式3X<sup>4</sup>-6X<sup>2</sup>+5X-10的单链表如图所示。给定两个多项式，实现两个多项式相加算法。</p>
+<p></p>
+<p><img alt="" width="600" height="103" src="http://oj.acm.zj.cn:80/upload/201107/1928.PNG" /></p>]]></description>
+<input><![CDATA[<p>第一行输入包含两个整数m,n</p>
+<p>后续为m行和n行数据</p>
+<p>m，n分别代表两个多项式的项数</p>
+<p>后续每一行代表多项式的项，包含a,b两个数据，表示该项的系数和指数。</p>
+<p></p>]]></input> 
+<output><![CDATA[<p>从较高指数到较低指数，依次输出求得的和。</p>
+<p>每行一项，格式与输入相同，但无需输出项数，系数为0的项也不输出。</p>]]></output>
+<sample_input><![CDATA[2 3
+1 2
+1 1
+2 2
+1 1
+2 0
+]]></sample_input>
+<sample_output><![CDATA[3 2
+2 1
+2 0]]></sample_output>
+<test_input><![CDATA[4 5
+3 4
+-6 2
+5 1
+-10 0
+2 5
+3 3
+-2 2
+-5 1
+5 0]]></test_input>
+<test_output><![CDATA[2 5
+3 4
+3 3
+-8 2
+-5 0
+]]></test_output>
+<hint><![CDATA[]]></hint>
+<source><![CDATA[数据结构Java版]]></source>
+<solution language="C++"><![CDATA[#include<cstdio>
+#include<algorithm>
+using namespace std;
+
+struct P
+{
+	int c,in;
+}a[100],b[100];
+
+bool cmp(P a,P b)
+{
+	return a.in>b.in;
+}
+
+int main()
+{
+	int m,n,i,j;
+	scanf("%d%d",&m,&n);
+	for(i=0;i<m;i++)
+		scanf("%d%d",&a[i].c,&a[i].in);
+	for(i=0;i<n;i++)
+		scanf("%d%d",&b[i].c,&b[i].in);
+	sort(a,a+m,cmp);
+	sort(b,b+n,cmp);
+	i=j=0;
+	while(i<m||j<n)
+	{
+		if(a[i].in==b[j].in)
+		{
+			if(a[i].c+b[j].c)
+				printf("%d %d\n",a[i].c+b[j].c,a[i].in);
+			i++;
+			j++;
+		}
+		else if(a[i].in<b[j].in)
+		{
+			if(b[j].c)
+				printf("%d %d\n",b[j].c,b[j].in);
+			j++;
+		}
+		else
+		{
+			if(a[i].c)
+				printf("%d %d\n",a[i].c,a[i].in);
+			i++;
+		}
+	}
+	return 0;
+} ]]></solution>
+</item>
+</fps>
