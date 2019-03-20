@@ -13,7 +13,8 @@ const ProblemScheme = new mongoose.Schema({
     sampleInput: String,
     sampleOutput: String,
     hint: String,
-    test: []
+    test: [],
+    solution: String,
 });
 
 
