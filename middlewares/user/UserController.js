@@ -82,4 +82,21 @@ router.get('/logout', (req, res) => {
   res.status(200).end();
 });
 
+router.get('/validate', async (req, res) => {
+  const {email} = req.query;
+  if (!email || !emailValidator.validate(email)) {
+    return res.status(400).end();
+  } else {
+    try {
+      const isUnusedEmail = await User.isUnusedEmail(email);
+      if (!isUnusedEmail) {
+        return res.json({isUsed: true});
+      }
+      return res.json({isUsed: false});
+    } catch (e) {
+      res.status(500).send('Server error');
+    }
+  }
+});
+
 module.exports = router;

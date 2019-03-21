@@ -19,7 +19,7 @@ UserSchema.methods.validatePassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-UserSchema.statics.isUnusedEmail = function (email, callback) {
+UserSchema.statics.isUnusedEmail = function (email) {
     return new Promise((resolve, reject) => {
         this.countDocuments({email}, (err, count) => {
             if (err) {
