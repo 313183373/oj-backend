@@ -29,7 +29,7 @@ router.get('/', verifyToken(false), async (req, res) => {
 router.get('/:problemId', verifyToken(false), async (req, res) => {
   const problemId = req.params.problemId;
   try {
-    const problem = await Problem.findById(problemId).exec();
+    const problem = await Problem.findById(problemId, {solution: 0}).exec();
     res.json(problem);
   } catch (e) {
     return res.status(404).send("Problem not found");
