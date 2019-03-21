@@ -14,7 +14,7 @@ const ProblemScheme = new mongoose.Schema({
     sampleOutput: String,
     hint: String,
     test: [],
-    solution: String,
+    solution: [],
 });
 
 
