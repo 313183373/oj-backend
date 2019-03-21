@@ -58,7 +58,7 @@ async function checkParams(req, res, next) {
     return res.status(400).send("Invalid parameters");
   }
   if (!supportLanguage.includes(language)) {
-    return res.status(501).send("Not support language");
+    return res.status(501).send("Not supported language");
   }
   try {
     const isExist = await Problem.isProblemExist(problem);
