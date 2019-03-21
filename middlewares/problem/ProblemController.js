@@ -10,9 +10,12 @@ const Problem = mongoose.model('Problem');
 
 router.use(express.json());
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken(false), async (req, res) => {
   const page = req.query.page ? +req.query.page : 1;
   const problemPerPage = req.query.size ? +req.query.size : 10;
+  if (page <= 0 || problemPerPage <= 0) {
+    return res.status(400).send("Invalid parameters");
+  }
   const start = (page - 1) * problemPerPage;
   const problems = await Problem.find({}, {
     title: 1,
@@ -23,7 +26,7 @@ router.get('/', async (req, res) => {
   res.json({problems: problems, totalProblemNumber});
 });
 
-router.get('/:problemId', async (req, res) => {
+router.get('/:problemId', verifyToken(false), async (req, res) => {
   const problemId = req.params.problemId;
   try {
     const problem = await Problem.findById(problemId).exec();
@@ -33,7 +36,7 @@ router.get('/:problemId', async (req, res) => {
   }
 });
 
-router.post('/:problemId', verifyToken(false), checkParams, (req, res) => {
+router.post('/:problemId', verifyToken(true), checkParams, (req, res) => {
   const {language, code} = req.body;
   const problem = req.params.problemId;
   const userId = req.user && req.user.id;
