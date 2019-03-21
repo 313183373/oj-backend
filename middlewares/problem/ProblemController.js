@@ -12,7 +12,7 @@ router.use(express.json());
 
 router.get('/', async (req, res) => {
   const page = req.query.page ? +req.query.page : 1;
-  const problemPerPage = 10;
+  const problemPerPage = req.query.size ? +req.query.size : 10;
   const start = (page - 1) * problemPerPage;
   const problems = await Problem.find({}, {
     title: 1,
@@ -46,7 +46,7 @@ router.post('/:problemId', verifyToken(false), checkParams, (req, res) => {
     judgeEmitter.emit('startJudge', submit._id, problem);
     res.json({
       message: "Submit success",
-    })
+    });
   });
 });
 
