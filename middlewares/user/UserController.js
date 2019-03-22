@@ -54,7 +54,7 @@ router.get('/me', verifyToken(), (req, res) => {
     if (!user) {
       return res.status(404).send('No user found.');
     }
-    res.status(200).send({user: user, token: req.decoded});
+    res.status(200).json({username: user.name, email: user.email, token: req.decoded});
   });
 });
 
