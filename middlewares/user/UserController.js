@@ -60,7 +60,7 @@ router.get('/me', verifyToken(), (req, res) => {
 
 router.post('/login', (req, res) => {
   const {email, password} = req.body;
-  if (!email || !password || !emailValidator.validate(email) || !passwordSchema.validate(password)) {
+  if (!email || !password || !emailValidator(email) || !passwordValidator(password)) {
     return res.status(400).send("Invalid username/password supplied");
   }
   User.findOne({email: req.body.email}, (err, user) => {
@@ -84,7 +84,7 @@ router.get('/logout', (req, res) => {
 
 router.get('/validate', async (req, res) => {
   const {email} = req.query;
-  if (!email || !emailValidator.validate(email)) {
+  if (!email || !emailValidator(email)) {
     return res.status(400).end();
   } else {
     try {
