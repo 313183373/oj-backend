@@ -3,46 +3,46 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
 const verifyToken = require('../auth/VerifyToken');
-const emailValidator = require('email-validator');
-const PasswordValidator = require('password-validator');
 const mongoose = require("mongoose");
+const {emailValidator, passwordValidator, usernameValidator} = require('../../utils/validator');
 
 const User = mongoose.model('User');
-const passwordSchema = new PasswordValidator();
 
-passwordSchema.is().min(6).is().max(36).has().digits().has().letters().has().not().spaces();
 
 router.use(bodyParser.urlencoded({extended: false}));
 router.use(bodyParser.json());
 
 router.post('/', async (req, res) => {
-  const {name, email, password} = req.body;
-  if (!name || !email || !password || !emailValidator.validate(email) || !passwordSchema.validate(password)) {
+  const {username, email, password} = req.body;
+  if (!username || !email || !password || !emailValidator(email) || !passwordValidator(password) || !usernameValidator(username)) {
     return res.status(400).send("Invalid parameters");
   }
-  let isUnusedEmail = true;
   try {
-    isUnusedEmail = await User.isUnusedEmail(email);
+    const isUnusedEmail = await User.isUnusedEmail(email);
+    if (!isUnusedEmail) {
+      return res.status(400).send("Email already used");
+    }
+    const inUnusedUsername = await User.isUnusedUsername(username);
+    if (!inUnusedUsername) {
+      return res.status(400).send("Username already used");
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 8);
+    User.create({
+      username,
+      email,
+      password: hashedPassword,
+    }, function (err, user) {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Server error");
+      }
+      const token = user.generateToken();
+      res.status(200).send(token);
+    })
   } catch (e) {
     console.error(e);
     return res.status(500).send("Server error");
   }
-  if (!isUnusedEmail) {
-    return res.status(400).send("Email already used");
-  }
-  const hashedPassword = bcrypt.hashSync(req.body.password, 8);
-  User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: hashedPassword,
-  }, function (err, user) {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Server error");
-    }
-    const token = user.generateToken();
-    res.status(200).send(token);
-  })
 });
 
 router.get('/me', verifyToken(), (req, res) => {
@@ -54,7 +54,7 @@ router.get('/me', verifyToken(), (req, res) => {
     if (!user) {
       return res.status(404).send('No user found.');
     }
-    res.status(200).json({username: user.name, email: user.email, token: req.decoded});
+    res.status(200).json({username: user.username, email: user.email, token: req.decoded});
   });
 });
 
@@ -74,7 +74,7 @@ router.post('/login', (req, res) => {
       return res.status(401).send('Password wrong');
     }
     const token = user.generateToken();
-    res.status(200).json({email, username: user.name, token});
+    res.status(200).json({email, username: user.username, token});
   })
 });
 
