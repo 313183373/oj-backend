@@ -1,4 +1,5 @@
 const PasswordValidator = require('password-validator');
+const emailValidator = require("mongoose");
 const passwordSchema = new PasswordValidator();
 
 passwordSchema.is().min(6).is().max(36).has().digits().has().letters().has().not().spaces();
