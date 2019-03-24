@@ -26,6 +26,7 @@
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.12",
     "password-validator": "^4.1.1",
+    "socket.io": "^2.2.0",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
