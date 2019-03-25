@@ -49,6 +49,7 @@ router.post('/:problemId', verifyToken(true), checkParams, (req, res) => {
     judgeEmitter.emit('startJudge', submit._id, problem);
     res.json({
       message: "Submit success",
+      submitId: submit._id,
     });
   });
 });

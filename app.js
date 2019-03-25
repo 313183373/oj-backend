@@ -3,13 +3,13 @@ const morgan = require('morgan');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-const handleSocket = require('./socket/socketHandler');
+const {socketHandler} = require('./socket/socketHandler');
 require('./db');
 require('./models/problem/Problem');
 require('./models/user/User');
 require('./models/submit/Submit');
 
-io.on('connection', handleSocket);
+io.on('connection', socketHandler);
 
 const UserController = require('./middlewares/user/UserController');
 const ProblemController = require('./middlewares/problem/ProblemController');
