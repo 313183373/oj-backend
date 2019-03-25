@@ -18,6 +18,8 @@ module.exports = {
           socket.emit('result', JSON.stringify(submit));
         } else {
           console.log('submit id is not right');
+          console.log(submit._id, submitId);
+          console.log(submit._id === submitId);
         }
       })
     });
