@@ -13,7 +13,7 @@ module.exports = {
       console.log('get a listenToSubmit event from client, submitId' + submitId);
       socketEmitter.on('judgeEnd', submit => {
         console.log('receive judgeEnd', submit._id);
-        if (submit._id === submitId) {
+        if (String(submit._id) === submitId) {
           console.log('send back the result to client');
           socket.emit('result', JSON.stringify(submit));
         } else {
