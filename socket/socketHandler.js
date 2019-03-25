@@ -11,8 +11,9 @@ module.exports = {
 
     socket.on('listenToSubmit', function (submitId) {
       socketEmitter.on('judgeEnd', submit => {
+        console.log('receive judgeEnd', submit);
         if (submit._id === submitId) {
-          socket.emit('result', submit);
+          socket.emit('result', JSON.stringify(submit));
         }
       })
     });

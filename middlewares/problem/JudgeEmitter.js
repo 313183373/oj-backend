@@ -29,7 +29,7 @@ judgeEmitter.on('startJudge', (submitID, problemID) => {
       console.log('stderr:');
       console.error(stderr);
     }
-    Submit.find({_id: submitID}, function (err, submit) {
+    Submit.findOne({_id: submitID}, function (err, submit) {
       if (err) {
         console.error(err);
       }
