@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
+  submits: [{type: mongoose.Schema.Types.ObjectId, ref: 'Submit'}]
 });
 
 UserSchema.methods.generateToken = function () {

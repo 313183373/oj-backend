@@ -65,10 +65,16 @@ router.post('/:problemId', verifyToken(true), checkParams, (req, res) => {
       console.error(err);
       return res.status(500).send("Server error");
     }
-    judgeEmitter.emit('startJudge', submit._id, problem);
-    res.json({
-      message: "Submit success",
-      submitId: submit._id,
+    Problem.updateOne({_id: problem}, {$push: {submits: submit._id}}, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Server error');
+      }
+      judgeEmitter.emit('startJudge', submit._id, problem);
+      res.json({
+        message: "Submit success",
+        submitId: submit._id,
+      });
     });
   });
 });
