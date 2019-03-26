@@ -22,7 +22,8 @@ router.get('/', verifyToken(false), async (req, res) => {
     submitCount: 1,
     acceptCount: 1
   }).skip(start).limit(problemPerPage).exec();
-  if(req.user) {
+  if (req.user) {
+    console.log('is log in');
     const testProblems = await Problem.aggregate([
       {
         $lookup: {
@@ -34,9 +35,7 @@ router.get('/', verifyToken(false), async (req, res) => {
       },
       {
         $match: {
-          submits: {
-            author: '5c9760fc62556e94d217144e'
-          }
+          'submits.author': mongoose.Types.ObjectId(req.user.id),
         }
       }
     ]).exec();
