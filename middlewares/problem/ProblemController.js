@@ -12,35 +12,12 @@ router.use(express.json());
 
 router.get('/', verifyToken(false), async (req, res) => {
   const page = req.query.page ? +req.query.page : 1;
-  const problemPerPage = req.query.size ? +req.query.size : 10;
-  if (page <= 0 || problemPerPage <= 0) {
+  const size = req.query.size ? +req.query.size : 10;
+  if (page <= 0 || size <= 0) {
     return res.status(400).send("Invalid parameters");
   }
-  const start = (page - 1) * problemPerPage;
-  const problems = await Problem.find({}, {
-    title: 1,
-    submitCount: 1,
-    acceptCount: 1
-  }).skip(start).limit(problemPerPage).exec();
-  if (req.user) {
-    console.log('is log in');
-    const testProblems = await Problem.aggregate([
-      {
-        $lookup: {
-          from: 'submits',
-          localField: '_id',
-          foreignField: 'problem',
-          as: 'submits'
-        }
-      },
-      {
-        $match: {
-          'submits.author': mongoose.Types.ObjectId(req.user.id),
-        }
-      }
-    ]).exec();
-    console.log(testProblems);
-  }
+  const start = (page - 1) * size;
+  const problems = await Problem.findAllProblemsWithStatus(start, size, req.user && req.user.id);
   const totalProblemNumber = await Problem.estimatedDocumentCount();
   res.json({problems: problems, totalProblemNumber});
 });

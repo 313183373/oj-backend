@@ -33,4 +33,22 @@ ProblemScheme.statics.isProblemExist = function (id) {
   });
 };
 
+ProblemScheme.statics.findAllProblemsWithStatus = async function (start, size, userId) {
+  const result = userId ? await this.find({}).populate({
+    path: 'submits',
+    match: {author: userId}
+  }).skip(start).limit(size).lean().select('title submitCount acceptCount submits') : await this.find({}).skip(start).limit(size).lean().select('title submitCount acceptCount');
+  return result.map(problem => {
+    const isSubmitted = problem.submits ? problem.submits.length !== 0 : false;
+    const isAccepted = problem.submits ? problem.submits.some(submit => submit.status === 'AC') : false;
+    return {
+      title: problem.title,
+      submitCount: problem.submitCount,
+      acceptCount: problem.acceptCount,
+      isSubmitted,
+      isAccepted
+    };
+  });
+};
+
 mongoose.model('Problem', ProblemScheme);
