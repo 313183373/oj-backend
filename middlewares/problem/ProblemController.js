@@ -22,6 +22,26 @@ router.get('/', verifyToken(false), async (req, res) => {
     submitCount: 1,
     acceptCount: 1
   }).skip(start).limit(problemPerPage).exec();
+  if(req.user) {
+    const testProblems = await Problem.aggregate([
+      {
+        $lookup: {
+          from: 'submits',
+          localField: '_id',
+          foreignField: 'problem',
+          as: 'submits'
+        }
+      },
+      {
+        $match: {
+          submits: {
+            author: '5c9760fc62556e94d217144e'
+          }
+        }
+      }
+    ]).exec();
+    console.log(testProblems);
+  }
   const totalProblemNumber = await Problem.estimatedDocumentCount();
   res.json({problems: problems, totalProblemNumber});
 });
