@@ -46,7 +46,8 @@ ProblemScheme.statics.findAllProblemsWithStatus = async function (start, size, u
       submitCount: problem.submitCount,
       acceptCount: problem.acceptCount,
       isSubmitted,
-      isAccepted
+      isAccepted,
+      _id: problem._id,
     };
   });
 };
