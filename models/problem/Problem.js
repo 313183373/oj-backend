@@ -41,12 +41,12 @@ ProblemScheme.statics.findAllProblemsWithStatus = async function (start, size, u
   return result.map(problem => {
     const isSubmitted = problem.submits ? problem.submits.length !== 0 : false;
     const isAccepted = problem.submits ? problem.submits.some(submit => submit.status === 'AC') : false;
+    const status = isAccepted ? 'accepted' : isSubmitted ? 'submitted' : 'none';
     return {
       title: problem.title,
       submitCount: problem.submitCount,
       acceptCount: problem.acceptCount,
-      isSubmitted,
-      isAccepted,
+      status,
       _id: problem._id,
     };
   });
