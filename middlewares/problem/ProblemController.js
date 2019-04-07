@@ -36,7 +36,7 @@ router.get('/:problemId', verifyToken(false), async (req, res) => {
 router.get('/:problemId/submits', verifyToken(true), async (req, res) => {
   const problemId = req.params.problemId;
   try {
-    const problem = await Submit.findSubmitsByProblemId(problemId, req.user && req.user.id);
+    const problem = await Submit.findSubmitsByProblemIdOrderByCreatedDesc(problemId, req.user && req.user.id);
     res.json(problem);
   } catch (e) {
     return res.status(404).send("Problem not found");
