@@ -6,6 +6,7 @@ const judgeEmitter = require('./JudgeEmitter');
 const express = require('express');
 
 const Problem = mongoose.model('Problem');
+const Submit = mongoose.model('Submit');
 
 
 router.use(express.json());
@@ -26,6 +27,16 @@ router.get('/:problemId', verifyToken(false), async (req, res) => {
   const problemId = req.params.problemId;
   try {
     const problem = await Problem.findById(problemId, {solution: 0, test: 0}).exec();
+    res.json(problem);
+  } catch (e) {
+    return res.status(404).send("Problem not found");
+  }
+});
+
+router.get('/:problemId/submits', verifyToken(true), async (req, res) => {
+  const problemId = req.params.problemId;
+  try {
+    const problem = await Submit.findSubmitsByProblemId(problemId, req.user && req.user.id);
     res.json(problem);
   } catch (e) {
     return res.status(404).send("Problem not found");
