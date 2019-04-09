@@ -53,7 +53,7 @@ router.post('/:problemId', verifyToken(true), checkParams, (req, res) => {
       console.error(err);
       return res.status(500).send("Server error");
     }
-    Problem.updateOne({_id: problem}, {$push: {submits: submit._id}}, (err, result) => {
+    Problem.updateOne({_id: problem}, {$push: {submits: submit._id}, $inc: {submitCount: 1}}, (err, result) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Server error');

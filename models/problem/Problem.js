@@ -52,4 +52,8 @@ ProblemScheme.statics.findAllProblemsWithStatus = async function (start, size, u
   });
 };
 
+ProblemScheme.statics.increaseAcceptCountById = async function (id) {
+  await this.updateOne({_id: id}, {$inc: {acceptCount: 1}});
+};
+
 mongoose.model('Problem', ProblemScheme);
