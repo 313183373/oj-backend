@@ -16,10 +16,6 @@ module.exports = {
         if (String(submit._id) === submitId) {
           console.log('send back the result to client');
           socket.emit('result', JSON.stringify(submit));
-        } else {
-          console.log('submit id is not right');
-          console.log(submit._id, submitId);
-          console.log(submit._id === submitId);
         }
       })
     });
