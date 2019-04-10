@@ -13,7 +13,8 @@ const judgeEmitter = new JudgeEmitter();
 judgeEmitter.on('startJudge', (submitID, problemID) => {
   const command = `docker run --cap-add=SYS_PTRACE --net=mynet --rm -w /judge 313183373/oj ./judge ${submitID} ${problemID}`;
   console.log(`${submitID} ${problemID}`);
-  childProcess.exec(command, async function (err, stdout, stderr) {
+  const options = {maxBuffer: 1024 * 1024 * 256};
+  childProcess.exec(command, options, async function (err, stdout, stderr) {
     if (err) {
       console.error(err);
       console.log(err.code, err.signal);
@@ -32,7 +33,6 @@ judgeEmitter.on('startJudge', (submitID, problemID) => {
     }
     try {
       const submit = await Submit.findOne({_id: submitID});
-      console.log(submit);
       socketEmitter.emit('judgeEnd', submit);
       if (submit.status === 'AC') {
         await Problem.increaseAcceptCountById(submit.problem);
