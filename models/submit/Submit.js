@@ -20,7 +20,7 @@ SubmitScheme.statics.findSubmitsByProblemIdOrderByCreatedDesc = async function (
 };
 
 SubmitScheme.statics.findSubmitById = async function (submitId) {
-  return await this.findById(submitId);
+  return await this.findById(submitId).populate('problem');
 };
 
 mongoose.model("Submit", SubmitScheme);
