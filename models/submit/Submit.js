@@ -13,7 +13,14 @@ const SubmitScheme = new mongoose.Schema({
 });
 
 SubmitScheme.statics.findSubmitsByProblemIdOrderByCreatedDesc = async function (problemId, userId) {
-  return await this.find({problem: problemId, author: userId}).sort({created: 'desc'}).select('created status time memory language').limit(20).lean();
+  return await this.find({
+    problem: problemId,
+    author: userId
+  }).sort({created: 'desc'}).select('created status time memory language').limit(20).lean();
+};
+
+SubmitScheme.statics.findSubmitById = async function (submitId) {
+  return await this.find({_id: submitId});
 };
 
 mongoose.model("Submit", SubmitScheme);

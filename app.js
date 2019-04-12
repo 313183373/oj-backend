@@ -13,11 +13,13 @@ io.on('connection', socketHandler);
 
 const UserController = require('./middlewares/user/UserController');
 const ProblemController = require('./middlewares/problem/ProblemController');
+const SubmitController = require('./middlewares/submit/SubmitController');
 
 const PORT = 5000;
 
 app.use(morgan('dev'));
 app.use('/user', UserController);
 app.use('/problems', ProblemController);
+app.use('/submits', SubmitController);
 
 http.listen(PORT);
