@@ -8,7 +8,7 @@ router.get('/:submitId', verifyToken(true), async (req, res) => {
   const submitId = req.params.submitId;
   try {
     const submit = await Submit.findSubmitById(submitId);
-    if (submitId) {
+    if (submit) {
       return res.json(submit);
     }
     res.status(404).send('Not found');
