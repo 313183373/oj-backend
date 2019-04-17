@@ -1,12 +1,19 @@
 const mongoose = require('mongoose');
+const isProduction = process.env.NODE_ENV === 'production';
 mongoose.promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/oj', {
-    useNewUrlParser: true
-});
+
+if(isProduction) {
+    mongoose.connect('mongodb://db:27017/oj', {
+        useNewUrlParser: true
+    });
+} else {
+    mongoose.connect('mongodb://localhost:27017/oj', {
+        useNewUrlParser: true
+    });
+
+}
 
 const db = mongoose.connection;
-
-const isProduction = process.env.NODE_ENV === 'production';
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
