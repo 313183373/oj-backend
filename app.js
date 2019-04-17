@@ -16,8 +16,7 @@ const ProblemController = require('./middlewares/problem/ProblemController');
 const SubmitController = require('./middlewares/submit/SubmitController');
 
 const PORT = 5000;
-
-app.use(morgan('dev'));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'normal' : 'dev'));
 app.use('/user', UserController);
 app.use('/problems', ProblemController);
 app.use('/submits', SubmitController);
