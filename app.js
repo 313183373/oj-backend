@@ -21,4 +21,4 @@ app.use('/user', UserController);
 app.use('/problems', ProblemController);
 app.use('/submits', SubmitController);
 
-http.listen(PORT);
+http.listen(PORT, '0.0.0.0');
