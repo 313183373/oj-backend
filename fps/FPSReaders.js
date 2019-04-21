@@ -122,6 +122,8 @@ xmls.forEach(xmlFileName => {
         const testNumber = problem.test_input.length === problem.test_output.length ? problem.test_input.length : 0;
         if (testNumber) {
           for (let i = 0; i < testNumber; i++) {
+            problem.test_input[i] = splitLines(problem.test_input[i]).join('\n');
+            problem.test_output[i] = splitLines(problem.test_output[i]).join('\n');
             test.push({input: problem.test_input[i], output: problem.test_output[i]});
           }
         } else {
@@ -183,7 +185,7 @@ xmls.forEach(xmlFileName => {
         submits: [],
       };
     }).filter(noErrors);
-    console.log(util.inspect(formattedProblems, false, null));
+    // console.log(util.inspect(formattedProblems, false, null));
     saveToMongo(formattedProblems);
     // fs.writeFileSync(path.join(__dirname, "fps-to-json.js"), util.inspect(FormattedProblems, false, null));
   });
@@ -221,4 +223,13 @@ function validate(config = {isArray: true, minArrayLength: 1}) {
 
 function noErrors(problem) {
   return Object.entries(problem.errors).filter(([prop]) => importantErrors.includes(prop)).every(([prop, isError]) => !isError);
+}
+
+function splitLines(string) {
+
+  if (typeof string !== 'string') {
+    throw new TypeError(`Expected input to be of type \`string\`, got \`${typeof string}\``);
+  }
+
+  return string.split(/\r?\n/);
 }
