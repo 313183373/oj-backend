@@ -30,7 +30,7 @@ Socket：Socket.IO
 
    `docker pull 313183373/oj-frontend` 前端
 
-   然后在本目录下（存在docker-compose.yml文件）使用`docker-compose up`来启动整个项目
+   然后在本目录下（存在docker-compose.yml文件）使用`docker-compose up`来启动整个项目，然后在浏览器中访问localhost:3030即可
 
 2. 本地运行
 
