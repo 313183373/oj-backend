@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+  frontend:
+    # build: ./oj-frontend
+    image: 313183373/oj-frontend
+    restart: always
+    # deploy:
+    #   replicas: 5
+    #   resources:
+    #     limits: 
+    #       cpus: "0.1"
+    #       memory: 50M
+    #   restart_policy:
+    #     condition: on-failure
+    ports:
+      - "3030:80"
+    depends_on: 
+      - backend
+    networks: 
+      - ojNetwork
+
+  backend:
+    # build: ./oj-backend
+    image: 313183373/oj-backend
+    # deploy:
+    #   replicas: 5
+    #   resources:
+    #     limits: 
+    #       cpus: "1"
+    #       memory: 500M
+    #   restart_policy:
+    #     condition: on-failure
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      NODE_ENV: production
+      SECRET: xiongxin
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - ojNetwork
+
+  db:
+    image: 313183373/oj-db
+    restart: always
+    ports:
+      - "27017:27017"
+    networks: 
+      - ojNetwork
+    # deploy:
+    #   placement:
+    #     constraints: [node.role == manager]
+  # visualizer:
+  #   image: dockersamples/visualizer:stable
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - "/var/run/docker.sock:/var/run/docker.sock"
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]
+  #   networks:
+  #     - ojNetwork
+
+  # judge:
+  #   image: 313183373/oj-judge
+
+
+networks: 
+  ojNetwork:
+    driver: bridge
