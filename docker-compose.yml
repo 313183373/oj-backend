@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 services:
   frontend:
@@ -73,3 +73,4 @@ services:
 networks: 
   ojNetwork:
     driver: bridge
+    name: oj_ojNetwork
