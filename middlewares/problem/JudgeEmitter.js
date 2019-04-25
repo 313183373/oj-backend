@@ -6,12 +6,14 @@ const Submit = mongoose.model("Submit");
 const Problem = mongoose.model('Problem');
 const {socketEmitter} = require('../../socket/socketHandler');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 class JudgeEmitter extends EventEmitter {
 }
 
 const judgeEmitter = new JudgeEmitter();
 judgeEmitter.on('startJudge', (submitID, problemID) => {
-  const command = `docker run --cap-add=SYS_PTRACE --net=oj_ojNetwork --rm -w /judge 313183373/oj-judge ./judge ${submitID} ${problemID}`;
+  const command = isProduction ? `docker run --cap-add=SYS_PTRACE --net=oj_ojNetwork --rm -w /judge 313183373/oj-judge ./judge ${submitID} ${problemID}` : `docker run --cap-add=SYS_PTRACE --net=oj_ojNetwork --rm -w /judge 313183373/oj-judge:local ./judge ${submitID} ${problemID}`;
   console.log(`${submitID} ${problemID}`);
   const options = {maxBuffer: 1024 * 1024 * 256};
   childProcess.exec(command, options, async function (err, stdout, stderr) {
